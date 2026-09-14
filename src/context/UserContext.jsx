@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 const UserContext = createContext();
 
@@ -11,10 +11,13 @@ const UserProvider = ({ children }) => {
     JSON.parse(localStorage.getItem("currentUser")),
   );
 
-  console.log(currentUser)
-
+  useEffect(() => {
+    localStorage.setItem("currentUser", JSON.stringify(currentUser));
+  }, [currentUser]);
   return (
-    <UserContext.Provider value={[currentUser, setCurrentUser]}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{currentUser, setCurrentUser}}>
+      {children}
+    </UserContext.Provider>
   );
 };
 

@@ -1,19 +1,45 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import googleIcon from "../images/google-icon.png";
-import { Link } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase/firebase.js";
+import { Link, Navigate } from "react-router-dom";
+import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "../firebase/firebase.js";
 import { db } from "../firebase/firebase.js";
 import { doc, setDoc } from "firebase/firestore";
 import { UserContext } from "../context/UserContext.jsx";
 
 const Signup = () => {
-  const [currentUser, setCurrentUser] = useContext(UserContext);
+  const { currentUser, setCurrentUser } = useContext(UserContext);
 
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  let errorTimeout = useRef(null);
+
+  if (currentUser) {
+    return <Navigate to={"/"} />;
+  }
+
+  const showError = (message) => {
+    setError(message);
+
+    if (errorTimeout.current) {
+      clearTimeout(errorTimeout.current);
+    }
+
+    errorTimeout.current = setTimeout(() => {
+      setError("");
+    }, 3000);
+  };
+
+  const signupWithGoogle = async () => {
+    const { user } = await signInWithPopup(auth, googleProvider);
+
+    setCurrentUser(user.uid)
+  };
 
   const signupHandler = async (e) => {
     e.preventDefault();
@@ -30,21 +56,40 @@ const Signup = () => {
       return document.getElementById("password").focus();
     }
 
-    const { user } = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password,
-    );
+    setLoading(true);
 
-    await setDoc(doc(db, "users", user.uid), {
-      
-    });
+    try {
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
 
-    setCurrentUser(user.uid);
+      await setDoc(doc(db, "users", user.uid), {
+        name: name.trim(),
+        email: email.trim(),
+      });
 
-    setName("");
-    setEmail("");
-    setPassword("");
+      setCurrentUser(user.uid);
+
+      setName("");
+      setEmail("");
+      setPassword("");
+    } catch (error) {
+      if (error.code === "auth/weak-password") {
+        showError("Password must be at least 6 characters long.");
+      } else if (error.code === "auth/email-already-in-use") {
+        showError("An account with this email already exists.");
+      } else if (error.code === "auth/too-many-requests") {
+        showError("Too many failed attempts. Please try again later.");
+      } else if (error.code === "auth/network-request-failed") {
+        showError("Network error. Please check your internet connection.");
+      } else {
+        showError("Something went wrong. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -63,6 +108,8 @@ const Signup = () => {
         <div className="bg-white border border-[#E5E2EC] rounded-2xl p-6 sm:p-8">
           {/* Google Button */}
           <button
+          onClick={signupWithGoogle}
+            disabled={loading}
             type="button"
             className="w-full h-12 flex items-center justify-center gap-3 rounded-lg border border-[#DDD9E5] bg-white text-[#292638] font-medium hover:bg-[#F9F8FC] transition cursor-pointer"
           >
@@ -93,6 +140,7 @@ const Signup = () => {
                 <i className="ph ph-user absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A96A8] text-xl"></i>
 
                 <input
+                  disabled={loading}
                   id="fullName"
                   onChange={(e) => setName(e.target.value)}
                   value={name}
@@ -116,6 +164,7 @@ const Signup = () => {
                 <i className="ph ph-envelope-simple absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A96A8] text-xl"></i>
 
                 <input
+                  disabled={loading}
                   id="email"
                   onChange={(e) => setEmail(e.target.value)}
                   value={email}
@@ -139,6 +188,7 @@ const Signup = () => {
                 <i className="ph ph-lock-key absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A96A8] text-xl"></i>
 
                 <input
+                  disabled={loading}
                   id="password"
                   onChange={(e) => setPassword(e.target.value)}
                   value={password}
@@ -161,12 +211,29 @@ const Signup = () => {
               </div>
             </div>
 
+            {/* Error Message */}
+            <div
+              className={`flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 ${error ? "" : "hidden"}`}
+            >
+              <i className="ph ph-warning-circle text-lg"></i>
+              <span>{error}</span>
+            </div>
+
             {/* Signup Button */}
             <button
+              disabled={loading}
               type="submit"
-              className="w-full h-12 rounded-lg bg-[#6D5DFB] text-white font-semibold hover:bg-[#5D4DED] transition cursor-pointer"
+              className="relative w-full h-12 rounded-lg bg-[#6D5DFB] text-white font-semibold hover:bg-[#5D4DED] transition cursor-pointer"
             >
-              Create Account
+              <span className={loading ? "opacity-0" : "opacity-100"}>
+                Create Account
+              </span>
+
+              {loading && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                </div>
+              )}
             </button>
           </form>
 
