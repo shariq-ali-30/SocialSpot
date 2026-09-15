@@ -38,7 +38,12 @@ const Signup = () => {
   const signupWithGoogle = async () => {
     const { user } = await signInWithPopup(auth, googleProvider);
 
-    setCurrentUser(user.uid)
+    setDoc(doc(db, "users", user.uid), {
+      name: user.displayName,
+      email: user.email,
+    });
+
+    setCurrentUser(user.uid);
   };
 
   const signupHandler = async (e) => {
@@ -108,12 +113,12 @@ const Signup = () => {
         <div className="bg-white border border-[#E5E2EC] rounded-2xl p-6 sm:p-8">
           {/* Google Button */}
           <button
-          onClick={signupWithGoogle}
+            onClick={signupWithGoogle}
             disabled={loading}
             type="button"
             className="w-full h-12 flex items-center justify-center gap-3 rounded-lg border border-[#DDD9E5] bg-white text-[#292638] font-medium hover:bg-[#F9F8FC] transition cursor-pointer"
           >
-            <img src={googleIcon} width={22} alt="Google" />
+            <img src={googleIcon} width={22} />
             Continue with Google
           </button>
 

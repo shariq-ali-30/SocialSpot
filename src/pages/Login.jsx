@@ -1,9 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import googleIcon from "../images/google-icon.png";
 import { Link, Navigate } from "react-router-dom";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { UserContext } from "../context/UserContext";
-import { auth, googleProvider } from "../firebase/firebase";
+import { auth, db, googleProvider } from "../firebase/firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 const Login = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
@@ -14,6 +15,8 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  let errorTimeout = useRef(null);
+
   if (currentUser) {
     return <Navigate to={"/"} />;
   }
@@ -21,16 +24,25 @@ const Login = () => {
   const showError = (message) => {
     setError(message);
 
-    setTimeout(() => {
+    if (errorTimeout.current) {
+      clearTimeout(errorTimeout.current);
+    }
+
+    errorTimeout.current = setTimeout(() => {
       setError("");
     }, 3000);
   };
 
-    const loginWithGoogle = async () => {
-      const { user } = await signInWithPopup(auth, googleProvider);
-  
-      setCurrentUser(user.uid)
-    };
+  const loginWithGoogle = async () => {
+    const { user } = await signInWithPopup(auth, googleProvider);
+
+    setDoc(doc(db, "users", user.uid), {
+      name: user.displayName,
+      email: user.email,
+    });
+
+    setCurrentUser(user.uid);
+  };
 
   const loginHandler = async (e) => {
     e.preventDefault();
@@ -85,7 +97,7 @@ const Login = () => {
         <div className="bg-white border border-[#E5E2EC] rounded-2xl p-6 sm:p-8">
           {/* Google Button */}
           <button
-          onClick={loginWithGoogle}
+            onClick={loginWithGoogle}
             disabled={loading}
             type="button"
             className="w-full h-12 flex items-center justify-center gap-3 rounded-lg border border-[#DDD9E5] bg-white text-[#292638] font-medium hover:bg-[#F9F8FC] transition cursor-pointer"
