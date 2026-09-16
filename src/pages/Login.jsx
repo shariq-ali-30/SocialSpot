@@ -34,12 +34,14 @@ const Login = () => {
   };
 
   const loginWithGoogle = async () => {
+    setLoading(true);
     try {
       const { user } = await signInWithPopup(auth, googleProvider);
 
       setDoc(doc(db, "users", user.uid), {
         name: user.displayName,
         email: user.email,
+        profileImage: user.photoURL,
       });
 
       setCurrentUser(user.uid);
@@ -53,6 +55,8 @@ const Login = () => {
       } else {
         showError("Something went wrong. Please try again.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -220,6 +224,7 @@ const Login = () => {
           <p className="text-center text-sm text-[#77738A] mt-6">
             Don't have an account?{" "}
             <Link
+              onClick={(e) => { if (loading) { e.preventDefault(); } }}
               to={"/signup"}
               className="font-semibold text-[#6D5DFB] hover:text-[#5848E8]"
             >

@@ -1,11 +1,22 @@
-import React, { useContext, useState } from "react";
-import { UserContext } from "../context/UserContext";
-import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import { useContext, useState } from "react";
 import CreatePostModal from "../components/CreatePostModal";
+import LoginRequiredModal from "../components/LoginRequiredModal";
+import Navbar from "../components/Navbar";
+import { UserContext } from "../context/UserContext";
 
 const Home = () => {
+  const { currentUser, userData } = useContext(UserContext);
+
   const [openModal, setOpenModal] = useState(false);
+  const [openLoginModal, setOpenLoginModal] = useState(false);
+
+  const openCreatePostModal = () => {
+    if (!currentUser) {
+      return setOpenLoginModal(true);
+    }
+
+    setOpenModal(true);
+  };
 
   return (
     <>
@@ -18,14 +29,20 @@ const Home = () => {
               {/* User Avatar */}
               <div className="w-11 h-11 rounded-full overflow-hidden shrink-0 bg-[#F8F7FC]">
                 <img
-                  src="https://i.pravatar.cc/100?img=12"
-                  alt="User"
+                  src={
+                    userData?.profileImage ||
+                    "https://res.cloudinary.com/h9rncg6u/image/upload/v1789581622/qukb1ttnuzfhgs8vcng8.jpg"
+                  }
+                  alt={userData?.name || "User"}
                   className="w-full h-full object-cover"
                 />
               </div>
 
               {/* Post Input */}
-              <button onClick={()=> setOpenModal(true)} className="w-full text-left font-semibold resize-none rounded-lg border border-[#DDD9E5] bg-[#FDFDFF] px-4 py-3 text-sm text-[#77738A] transition hover:bg-[#F8F7FC] cursor-pointer">
+              <button
+                onClick={openCreatePostModal}
+                className="w-full text-left font-semibold resize-none rounded-lg border border-[#DDD9E5] bg-[#FDFDFF] px-4 py-3 text-sm text-[#77738A] transition hover:bg-[#F8F7FC] cursor-pointer"
+              >
                 What's on your mind?
               </button>
             </div>
@@ -33,6 +50,10 @@ const Home = () => {
         </div>
       </main>
       <CreatePostModal openModal={openModal} setOpenModal={setOpenModal} />
+      <LoginRequiredModal
+        openLoginModal={openLoginModal}
+        setOpenLoginModal={setOpenLoginModal}
+      />
     </>
   );
 };

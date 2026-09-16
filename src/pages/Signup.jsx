@@ -36,12 +36,14 @@ const Signup = () => {
   };
 
   const signupWithGoogle = async () => {
+    setLoading(true);
     try {
       const { user } = await signInWithPopup(auth, googleProvider);
 
       setDoc(doc(db, "users", user.uid), {
         name: user.displayName,
         email: user.email,
+        profileImage: user.photoURL,
       });
 
       setCurrentUser(user.uid);
@@ -55,6 +57,8 @@ const Signup = () => {
       } else {
         showError("Something went wrong. Please try again.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -258,6 +262,11 @@ const Signup = () => {
           <p className="text-center text-sm text-[#77738A] mt-6">
             Already have an account?{" "}
             <Link
+              onClick={(e) => {
+                if (loading) {
+                  e.preventDefault();
+                }
+              }}
               to="/login"
               className="font-semibold text-[#6D5DFB] hover:text-[#5848E8]"
             >
