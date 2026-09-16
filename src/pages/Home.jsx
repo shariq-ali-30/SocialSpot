@@ -1,43 +1,38 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { Link, useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import CreatePostModal from "../components/CreatePostModal";
 
 const Home = () => {
-  const { currentUser, setCurrentUser } = useContext(UserContext);
+  const [openModal, setOpenModal] = useState(false);
 
-  const navigate = useNavigate();
-
-  const logoutHandler = () => {
-    setCurrentUser(null);
-    navigate("/login");
-  };
   return (
     <>
-      <div className="text-5xl font-bold text-center mt-5">Home Page</div>
-      {currentUser ? (
-        <button
-          onClick={logoutHandler}
-          className="py-2 px-5 block mx-auto my-4 bg-red-600 text-white rounded-[4px] cursor-pointer"
-        >
-          Logout
-        </button>
-      ) : (
-        <div className="flex justify-center gap-3 my-4">
-          <Link
-            to={"/login"}
-            className="py-2 px-5 bg-[#6D5DFB] text-white rounded-[4px] cursor-pointer hover:bg-[#7B6CFC] transition"
-          >
-            Login
-          </Link>
+      <main className=" bg-[#F8F7FC]">
+        <div className="mx-auto w-full max-w-[1920px] h-screen">
+          <Navbar />
+          <div className="bg-white border border-[#E5E2EC] rounded-2xl p-5 my-5 w-full max-w-[800px] mx-auto">
+            {/* User + Textarea */}
+            <div className="flex gap-3">
+              {/* User Avatar */}
+              <div className="w-11 h-11 rounded-full overflow-hidden shrink-0 bg-[#F8F7FC]">
+                <img
+                  src="https://i.pravatar.cc/100?img=12"
+                  alt="User"
+                  className="w-full h-full object-cover"
+                />
+              </div>
 
-          <Link
-            to={"/signup"}
-            className="py-2 px-5 border border-[#6D5DFB] text-[#6D5DFB] rounded-[4px] cursor-pointer hover:bg-[#F0EEFF] transition"
-          >
-            Signup
-          </Link>
+              {/* Post Input */}
+              <button onClick={()=> setOpenModal(true)} className="w-full text-left font-semibold resize-none rounded-lg border border-[#DDD9E5] bg-[#FDFDFF] px-4 py-3 text-sm text-[#77738A] transition hover:bg-[#F8F7FC] cursor-pointer">
+                What's on your mind?
+              </button>
+            </div>
+          </div>
         </div>
-      )}
+      </main>
+      <CreatePostModal openModal={openModal} setOpenModal={setOpenModal} />
     </>
   );
 };

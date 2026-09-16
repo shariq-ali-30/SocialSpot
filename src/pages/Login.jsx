@@ -34,14 +34,26 @@ const Login = () => {
   };
 
   const loginWithGoogle = async () => {
-    const { user } = await signInWithPopup(auth, googleProvider);
+    try {
+      const { user } = await signInWithPopup(auth, googleProvider);
 
-    setDoc(doc(db, "users", user.uid), {
-      name: user.displayName,
-      email: user.email,
-    });
+      setDoc(doc(db, "users", user.uid), {
+        name: user.displayName,
+        email: user.email,
+      });
 
-    setCurrentUser(user.uid);
+      setCurrentUser(user.uid);
+    } catch (error) {
+      if (error.code === "auth/too-many-requests") {
+        showError("Too many failed attempts. Please try again later.");
+      } else if (error.code === "auth/network-request-failed") {
+        showError("Network error. Please check your internet connection.");
+      } else if (error.code === "auth/user-disabled") {
+        showError("This account has been disabled.");
+      } else {
+        showError("Something went wrong. Please try again.");
+      }
+    }
   };
 
   const loginHandler = async (e) => {
@@ -167,7 +179,7 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="flex justify-center items-center absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9A96A8] hover:text-[#6D5DFB] cursor-pointer"
+                  className="flex justify-center items-center absolute right-1.5 top-1/2 -translate-y-1/2 p-2 text-[#9A96A8] hover:text-[#6D5DFB] cursor-pointer"
                 >
                   <i
                     className={`ph ${
