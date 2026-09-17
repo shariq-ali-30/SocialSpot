@@ -2,8 +2,8 @@ import { useContext, useState } from "react";
 import CreatePostModal from "../components/CreatePostModal";
 import LoginRequiredModal from "../components/LoginRequiredModal";
 import Navbar from "../components/Navbar";
-import { UserContext } from "../context/UserContext";
 import PostCard from "../components/PostCard";
+import { UserContext } from "../context/UserContext";
 
 const Home = () => {
   const { currentUser, userData, posts } = useContext(UserContext);
@@ -51,7 +51,7 @@ const Home = () => {
           </div>
 
           {posts.map((post) => {
-            return <PostCard key={post.id} />
+            return <PostCard key={post.id} data={post} />;
           })}
         </div>
       </main>

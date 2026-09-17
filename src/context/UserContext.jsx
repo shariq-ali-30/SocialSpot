@@ -2,7 +2,9 @@ import {
   collection,
   doc,
   getDoc,
-  onSnapshot
+  onSnapshot,
+  orderBy,
+  query,
 } from "firebase/firestore";
 import { createContext, useEffect, useState } from "react";
 import { db } from "../firebase/firebase";
@@ -29,7 +31,12 @@ const UserProvider = ({ children }) => {
   };
 
   const getPosts = () => {
-    return onSnapshot(collection(db, "posts"), (querySnapshot) => {
+    const postsQuery = query(
+      collection(db, "posts"),
+      orderBy("createdAt", "desc"),
+    );
+
+    return onSnapshot(postsQuery, (querySnapshot) => {
       let postsData = querySnapshot.docs.map((doc) => {
         return { id: doc.id, ...doc.data() };
       });
@@ -45,11 +52,12 @@ const UserProvider = ({ children }) => {
     return () => unsub();
   }, [currentUser]);
   return (
-    <UserContext.Provider value={{ currentUser, setCurrentUser, userData, posts }}>
+    <UserContext.Provider
+      value={{ currentUser, setCurrentUser, userData, posts }}
+    >
       {children}
     </UserContext.Provider>
   );
 };
 
 export { UserContext, UserProvider };
-

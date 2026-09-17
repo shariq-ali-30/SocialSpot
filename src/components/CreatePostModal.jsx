@@ -27,8 +27,8 @@ const CreatePostModal = ({ openModal, setOpenModal }) => {
       let imageUrl = image ? await uploadImage(image) : "";
 
       await addDoc(collection(db, "posts"), {
-        author: currentUser,
-        autorProfile: userData.profileImage,
+        authorId: currentUser,
+        authorProfile: userData.profileImage || "",
         authorName: userData.name,
         title: title,
         description: description,
