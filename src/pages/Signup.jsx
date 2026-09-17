@@ -89,6 +89,7 @@ const Signup = () => {
       await setDoc(doc(db, "users", user.uid), {
         name: name.trim(),
         email: email.trim(),
+        profileImage: "",
       });
 
       setCurrentUser(user.uid);

@@ -74,7 +74,7 @@ const Navbar = () => {
                   <img
                     src={
                       userData?.profileImage ||
-                      "https://res.cloudinary.com/h9rncg6u/image/upload/v1789581622/qukb1ttnuzfhgs8vcng8.jpg"
+                      "https://res.cloudinary.com/h9rncg6u/image/upload/v1789618750/nzcseilvsvwbluzwexmy.jpg"
                     }
                     alt={userData?.name || "User"}
                     className="w-full h-full object-cover"

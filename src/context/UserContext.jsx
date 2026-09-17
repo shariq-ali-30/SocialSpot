@@ -13,18 +13,18 @@ const UserProvider = ({ children }) => {
     JSON.parse(localStorage.getItem("currentUser")),
   );
 
-  const [userData, setUserData] = useState(null)
+  const [userData, setUserData] = useState(null);
 
   const getUser = async () => {
     const docRef = doc(db, "users", currentUser);
     const docSnap = await getDoc(docRef);
 
-    setUserData(docSnap.data())
+    setUserData(docSnap.data());
   };
 
   useEffect(() => {
     localStorage.setItem("currentUser", JSON.stringify(currentUser));
-    getUser()
+    getUser();
   }, [currentUser]);
   return (
     <UserContext.Provider value={{ currentUser, setCurrentUser, userData }}>
