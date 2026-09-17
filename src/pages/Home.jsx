@@ -3,9 +3,10 @@ import CreatePostModal from "../components/CreatePostModal";
 import LoginRequiredModal from "../components/LoginRequiredModal";
 import Navbar from "../components/Navbar";
 import { UserContext } from "../context/UserContext";
+import PostCard from "../components/PostCard";
 
 const Home = () => {
-  const { currentUser, userData } = useContext(UserContext);
+  const { currentUser, userData, posts } = useContext(UserContext);
 
   const [openModal, setOpenModal] = useState(false);
   const [openLoginModal, setOpenLoginModal] = useState(false);
@@ -21,8 +22,9 @@ const Home = () => {
   return (
     <>
       <main className=" bg-[#F8F7FC]">
-        <div className="mx-auto w-full max-w-[1920px] h-screen">
+        <div className="mx-auto w-full max-w-[1920px] min-h-screen pb-5">
           <Navbar />
+
           <div className="bg-white border border-[#E5E2EC] rounded-2xl p-5 my-5 w-full max-w-[800px] mx-auto">
             {/* User + Textarea */}
             <div className="flex gap-3">
@@ -41,12 +43,16 @@ const Home = () => {
               {/* Post Input */}
               <button
                 onClick={openCreatePostModal}
-                className="w-full text-left font-semibold resize-none rounded-lg border border-[#DDD9E5] bg-[#FDFDFF] px-4 py-3 text-sm text-[#77738A] transition hover:bg-[#F8F7FC] cursor-pointer"
+                className="w-full text-left resize-none rounded-lg border border-[#DDD9E5] bg-[#FDFDFF] px-4 py-3 text-sm text-[#77738A] transition hover:bg-[#F8F7FC] cursor-pointer"
               >
                 What's on your mind?
               </button>
             </div>
           </div>
+
+          {posts.map((post) => {
+            return <PostCard key={post.id} />
+          })}
         </div>
       </main>
       <CreatePostModal openModal={openModal} setOpenModal={setOpenModal} />

@@ -1,5 +1,10 @@
-import { doc, getDoc } from "firebase/firestore";
-import React, { createContext, useEffect, useState } from "react";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot
+} from "firebase/firestore";
+import { createContext, useEffect, useState } from "react";
 import { db } from "../firebase/firebase";
 
 const UserContext = createContext();
@@ -14,6 +19,7 @@ const UserProvider = ({ children }) => {
   );
 
   const [userData, setUserData] = useState(null);
+  const [posts, setPosts] = useState([]);
 
   const getUser = async () => {
     const docRef = doc(db, "users", currentUser);
@@ -22,15 +28,28 @@ const UserProvider = ({ children }) => {
     setUserData(docSnap.data());
   };
 
+  const getPosts = () => {
+    return onSnapshot(collection(db, "posts"), (querySnapshot) => {
+      let postsData = querySnapshot.docs.map((doc) => {
+        return { id: doc.id, ...doc.data() };
+      });
+      setPosts(postsData);
+    });
+  };
+
   useEffect(() => {
     localStorage.setItem("currentUser", JSON.stringify(currentUser));
     getUser();
+    const unsub = getPosts();
+
+    return () => unsub();
   }, [currentUser]);
   return (
-    <UserContext.Provider value={{ currentUser, setCurrentUser, userData }}>
+    <UserContext.Provider value={{ currentUser, setCurrentUser, userData, posts }}>
       {children}
     </UserContext.Provider>
   );
 };
 
-export { UserProvider, UserContext };
+export { UserContext, UserProvider };
+
