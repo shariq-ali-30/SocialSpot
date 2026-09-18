@@ -1,11 +1,10 @@
-import React, { useContext } from "react";
-import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
+import { UserProvider } from "./context/UserContext";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import { UserProvider } from "./context/UserContext";
 import MyPosts from "./pages/MyPosts";
+import Signup from "./pages/Signup";
 
 const App = () => {
   return (

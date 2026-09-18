@@ -22,6 +22,7 @@ const UserProvider = ({ children }) => {
 
   const [userData, setUserData] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [loadingPosts, setLoadingPosts] = useState(false);
 
   const getUser = async () => {
     const docRef = doc(db, "users", currentUser);
@@ -31,6 +32,7 @@ const UserProvider = ({ children }) => {
   };
 
   const getPosts = () => {
+    setLoadingPosts(true);
     const postsQuery = query(
       collection(db, "posts"),
       orderBy("createdAt", "desc"),
@@ -41,6 +43,7 @@ const UserProvider = ({ children }) => {
         return { id: doc.id, ...doc.data() };
       });
       setPosts(postsData);
+      setLoadingPosts(false);
     });
   };
 
@@ -53,7 +56,7 @@ const UserProvider = ({ children }) => {
   }, [currentUser]);
   return (
     <UserContext.Provider
-      value={{ currentUser, setCurrentUser, userData, posts }}
+      value={{ currentUser, setCurrentUser, userData, posts, loadingPosts }}
     >
       {children}
     </UserContext.Provider>

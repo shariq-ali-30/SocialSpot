@@ -1,1 +1,28 @@
 @import "tailwindcss";
+
+html {
+    scrollbar-width: none;
+}
+
+@media (max-width:520px) {
+    main {
+        padding-bottom: 60.6px;
+    }
+
+    .nav-links {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: fit-content;
+        justify-content: center;
+        gap: 50px;
+        background: white;
+        border-top: 1px solid #ECEAF4;
+        z-index: 50;
+    }
+
+    .nav-links .link {
+        height: 50px;
+    }
+}

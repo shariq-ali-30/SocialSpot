@@ -2,8 +2,7 @@ import React, { useContext, useRef, useState } from "react";
 import googleIcon from "../images/google-icon.png";
 import { Link, Navigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "../firebase/firebase.js";
-import { db } from "../firebase/firebase.js";
+import { auth, googleProvider, db } from "../firebase/firebase.js";
 import { doc, setDoc } from "firebase/firestore";
 import { UserContext } from "../context/UserContext.jsx";
 
@@ -17,10 +16,10 @@ const Signup = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  let errorTimeout = useRef(null);
+  const errorTimeout = useRef(null);
 
   if (currentUser) {
-    return <Navigate to={"/"} />;
+    return <Navigate to="/" />;
   }
 
   const showError = (message) => {
@@ -37,6 +36,7 @@ const Signup = () => {
 
   const signupWithGoogle = async () => {
     setLoading(true);
+
     try {
       const { user } = await signInWithPopup(auth, googleProvider);
 
@@ -115,51 +115,57 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F7FC] flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-md">
-        {/* Heading */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-[#17152A]">Create Account</h1>
+    <div className="min-h-screen bg-[#F8F7FC] flex items-center justify-center px-[clamp(0.75rem,4vw,1.5rem)] py-[clamp(1.5rem,5vw,2.5rem)]">
+      <div className="w-full max-w-[clamp(20rem,90vw,28rem)]">
+        <div className="text-center mb-[clamp(1.5rem,4vw,2rem)]">
+          <h1 className="text-[clamp(1.5rem,4vw,1.875rem)] leading-tight font-bold text-[#17152A]">
+            Create Account
+          </h1>
 
-          <p className="text-[#77738A] mt-2">
+          <p className="text-[clamp(0.75rem,1.8vw,0.875rem)] leading-6 text-[#77738A] mt-[clamp(0.4rem,1vw,0.5rem)]">
             Create your account to get started
           </p>
         </div>
 
-        {/* Card */}
-        <div className="bg-white border border-[#E5E2EC] rounded-2xl p-6 sm:p-8">
-          {/* Google Button */}
+        <div className="bg-white border border-[#E5E2EC] rounded-[clamp(0.75rem,2vw,1rem)] p-[clamp(1rem,4vw,2rem)]">
           <button
             onClick={signupWithGoogle}
             disabled={loading}
             type="button"
-            className="w-full h-12 flex items-center justify-center gap-3 rounded-lg border border-[#DDD9E5] bg-white text-[#292638] font-medium hover:bg-[#F9F8FC] transition cursor-pointer"
+            className="w-full h-[clamp(2.75rem,7vw,3rem)] flex items-center justify-center gap-[clamp(0.5rem,1.5vw,0.75rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] border border-[#DDD9E5] bg-white px-[clamp(0.75rem,2vw,1rem)] text-[clamp(0.78rem,1.6vw,0.875rem)] text-[#292638] font-medium hover:bg-[#F9F8FC] transition cursor-pointer disabled:cursor-not-allowed"
           >
-            <img src={googleIcon} width={22} />
+            <img
+              src={googleIcon}
+              alt="Google"
+              className="w-[clamp(1.1rem,4vw,1.375rem)] h-[clamp(1.1rem,4vw,1.375rem)] object-contain"
+            />
             Continue with Google
           </button>
 
-          {/* Divider */}
-          <div className="flex items-center gap-4 my-6">
+          <div className="flex items-center gap-[clamp(0.65rem,2vw,1rem)] my-[clamp(1.25rem,4vw,1.5rem)]">
             <div className="h-px flex-1 bg-[#EAE7EF]"></div>
 
-            <span className="text-xs text-[#9A96A8]">OR</span>
+            <span className="text-[clamp(0.65rem,1.3vw,0.75rem)] text-[#9A96A8]">
+              OR
+            </span>
 
             <div className="h-px flex-1 bg-[#EAE7EF]"></div>
           </div>
 
-          <form onSubmit={signupHandler} className="space-y-5">
-            {/* Full Name */}
+          <form
+            onSubmit={signupHandler}
+            className="space-y-[clamp(1rem,3vw,1.25rem)]"
+          >
             <div>
               <label
                 htmlFor="fullName"
-                className="block text-sm font-medium text-[#39364A] mb-2"
+                className="block text-[clamp(0.75rem,1.5vw,0.875rem)] font-medium text-[#39364A] mb-[clamp(0.4rem,1vw,0.5rem)]"
               >
                 Full Name
               </label>
 
               <div className="relative">
-                <i className="ph ph-user absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A96A8] text-xl"></i>
+                <i className="ph ph-user absolute left-[clamp(0.7rem,2vw,0.875rem)] top-1/2 -translate-y-1/2 text-[#9A96A8] text-[clamp(1rem,3vw,1.25rem)]"></i>
 
                 <input
                   disabled={loading}
@@ -168,22 +174,21 @@ const Signup = () => {
                   value={name}
                   type="text"
                   placeholder="Enter your full name"
-                  className="w-full h-12 rounded-lg border-[1.5px] border-[#DDD9E5] bg-white pl-11 pr-4 text-[#292638] placeholder:text-[#AAA6B5] outline-none focus:border-[#6D5DFB] transition"
+                  className="w-full h-[clamp(2.75rem,7vw,3rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] border-[1.5px] border-[#DDD9E5] bg-white pl-[clamp(2.5rem,7vw,2.75rem)] pr-[clamp(0.75rem,2vw,1rem)] text-[clamp(0.78rem,1.6vw,0.875rem)] text-[#292638] placeholder:text-[#AAA6B5] outline-none focus:border-[#6D5DFB] transition"
                 />
               </div>
             </div>
 
-            {/* Email */}
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-[#39364A] mb-2"
+                className="block text-[clamp(0.75rem,1.5vw,0.875rem)] font-medium text-[#39364A] mb-[clamp(0.4rem,1vw,0.5rem)]"
               >
                 Email
               </label>
 
               <div className="relative">
-                <i className="ph ph-envelope-simple absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A96A8] text-xl"></i>
+                <i className="ph ph-envelope-simple absolute left-[clamp(0.7rem,2vw,0.875rem)] top-1/2 -translate-y-1/2 text-[#9A96A8] text-[clamp(1rem,3vw,1.25rem)]"></i>
 
                 <input
                   disabled={loading}
@@ -192,22 +197,21 @@ const Signup = () => {
                   value={email}
                   type="email"
                   placeholder="Enter your email"
-                  className="w-full h-12 rounded-lg border-[1.5px] border-[#DDD9E5] bg-white pl-11 pr-4 text-[#292638] placeholder:text-[#AAA6B5] outline-none focus:border-[#6D5DFB] transition"
+                  className="w-full h-[clamp(2.75rem,7vw,3rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] border-[1.5px] border-[#DDD9E5] bg-white pl-[clamp(2.5rem,7vw,2.75rem)] pr-[clamp(0.75rem,2vw,1rem)] text-[clamp(0.78rem,1.6vw,0.875rem)] text-[#292638] placeholder:text-[#AAA6B5] outline-none focus:border-[#6D5DFB] transition"
                 />
               </div>
             </div>
 
-            {/* Password */}
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-[#39364A] mb-2"
+                className="block text-[clamp(0.75rem,1.5vw,0.875rem)] font-medium text-[#39364A] mb-[clamp(0.4rem,1vw,0.5rem)]"
               >
                 Password
               </label>
 
               <div className="relative">
-                <i className="ph ph-lock-key absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A96A8] text-xl"></i>
+                <i className="ph ph-lock-key absolute left-[clamp(0.7rem,2vw,0.875rem)] top-1/2 -translate-y-1/2 text-[#9A96A8] text-[clamp(1rem,3vw,1.25rem)]"></i>
 
                 <input
                   disabled={loading}
@@ -216,36 +220,37 @@ const Signup = () => {
                   value={password}
                   type={showPassword ? "text" : "password"}
                   placeholder="Create a password"
-                  className="w-full h-12 rounded-lg border-[1.5px] border-[#DDD9E5] bg-white pl-11 pr-11 text-[#292638] placeholder:text-[#AAA6B5] outline-none focus:border-[#6D5DFB] transition"
+                  className="w-full h-[clamp(2.75rem,7vw,3rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] border-[1.5px] border-[#DDD9E5] bg-white pl-[clamp(2.5rem,7vw,2.75rem)] pr-[clamp(2.75rem,7vw,3rem)] text-[clamp(0.78rem,1.6vw,0.875rem)] text-[#292638] placeholder:text-[#AAA6B5] outline-none focus:border-[#6D5DFB] transition"
                 />
 
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="flex justify-center items-center absolute right-1.5 top-1/2 -translate-y-1/2 p-2 text-[#9A96A8] hover:text-[#6D5DFB] cursor-pointer"
+                  className="flex justify-center items-center absolute right-[clamp(0.25rem,0.8vw,0.375rem)] top-1/2 -translate-y-1/2 p-[clamp(0.35rem,1vw,0.5rem)] text-[#9A96A8] hover:text-[#6D5DFB] cursor-pointer"
                 >
                   <i
                     className={`ph ${
                       showPassword ? "ph-eye-slash" : "ph-eye"
-                    } text-xl`}
+                    } text-[clamp(1rem,3vw,1.25rem)]`}
                   ></i>
                 </button>
               </div>
             </div>
 
-            {/* Error Message */}
             <div
-              className={`flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 ${error ? "" : "hidden"}`}
+              className={`flex items-center gap-[clamp(0.4rem,1vw,0.5rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] border border-red-200 bg-red-50 px-[clamp(0.75rem,2vw,1rem)] py-[clamp(0.65rem,1.5vw,0.75rem)] text-[clamp(0.72rem,1.5vw,0.875rem)] text-red-600 ${
+                error ? "" : "hidden"
+              }`}
             >
-              <i className="ph ph-warning-circle text-lg"></i>
-              <span>{error}</span>
+              <i className="ph ph-warning-circle text-[clamp(1rem,2.5vw,1.125rem)] shrink-0"></i>
+
+              <span className="break-words">{error}</span>
             </div>
 
-            {/* Signup Button */}
             <button
               disabled={loading}
               type="submit"
-              className="relative w-full h-12 rounded-lg bg-[#6D5DFB] text-white font-semibold hover:bg-[#5D4DED] transition cursor-pointer"
+              className="relative w-full h-[clamp(2.75rem,7vw,3rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] bg-[#6D5DFB] text-white text-[clamp(0.78rem,1.6vw,0.875rem)] font-semibold hover:bg-[#5D4DED] transition cursor-pointer disabled:cursor-not-allowed"
             >
               <span className={loading ? "opacity-0" : "opacity-100"}>
                 Create Account
@@ -253,14 +258,13 @@ const Signup = () => {
 
               {loading && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  <div className="w-[clamp(1rem,3vw,1.25rem)] h-[clamp(1rem,3vw,1.25rem)] border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                 </div>
               )}
             </button>
           </form>
 
-          {/* Login */}
-          <p className="text-center text-sm text-[#77738A] mt-6">
+          <p className="text-center text-[clamp(0.75rem,1.6vw,0.875rem)] text-[#77738A] mt-[clamp(1.25rem,4vw,1.5rem)] leading-6">
             Already have an account?{" "}
             <Link
               onClick={(e) => {
