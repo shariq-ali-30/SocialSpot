@@ -1,10 +1,21 @@
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { useContext, useRef, useState } from "react";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
+import { useContext, useEffect, useRef, useState } from "react";
 import { db } from "../firebase/firebase";
 import { UserContext } from "../context/UserContext";
 import { uploadImage } from "../helper/cloudinary.js";
 
-const CreatePostModal = ({ openModal, setOpenModal }) => {
+const CreatePostModal = ({
+  openModal,
+  setOpenModal,
+  editMode,
+  setEditMode,
+}) => {
   const { currentUser, userData } = useContext(UserContext);
 
   const [title, setTitle] = useState("");
@@ -22,6 +33,28 @@ const CreatePostModal = ({ openModal, setOpenModal }) => {
     }
 
     setLoading(true);
+
+    if (editMode) {
+      const docRef = doc(db, "posts", editMode.id);
+
+      let imageUrl = editMode.image;
+
+      if (image) {
+        imageUrl = await uploadImage(image);
+      }
+
+      await updateDoc(docRef, {
+        title: title,
+        description: description,
+        image: imageUrl,
+        createdAt: serverTimestamp(),
+      });
+
+      setEditMode(null);
+      setLoading(false);
+      closeModal();
+      return;
+    }
 
     try {
       let imageUrl = image ? await uploadImage(image) : "";
@@ -50,7 +83,15 @@ const CreatePostModal = ({ openModal, setOpenModal }) => {
     setDescription("");
     setImage(null);
     imageRef.current.value = "";
+    setEditMode(null);
   };
+
+  useEffect(() => {
+    if (editMode) {
+      setTitle(editMode.title || "");
+      setDescription(editMode.description || "");
+    }
+  }, [editMode]);
 
   return (
     <>
@@ -76,11 +117,13 @@ const CreatePostModal = ({ openModal, setOpenModal }) => {
           <div className="flex items-center justify-between px-5 sm:px-6 py-5 border-b border-[#EAE7EF]">
             <div>
               <h2 className="text-xl font-bold text-[#17152A]">
-                Create a Post
+                {editMode ? "Edit Post" : "Create a Post"}
               </h2>
 
               <p className="text-sm text-[#77738A] mt-1">
-                Share something with your community
+                {editMode
+                  ? "Update your post and keep your community informed"
+                  : "Share something with your community"}
               </p>
             </div>
           </div>
@@ -170,7 +213,9 @@ const CreatePostModal = ({ openModal, setOpenModal }) => {
               disabled={(!title && !description && !image) || loading}
               className="relative h-11 px-6 rounded-lg bg-[#6D5DFB] text-white font-semibold hover:bg-[#5D4DED] transition text-sm cursor-pointer shadow-sm disabled:cursor-not-allowed"
             >
-              <span className={`${loading ? "invisible" : ""}`}>Post</span>
+              <span className={`${loading ? "invisible" : ""}`}>
+                {editMode ? "Update Post" : "Create Post"}
+              </span>
               {loading && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>

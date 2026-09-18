@@ -4,7 +4,7 @@ import { db } from "../firebase/firebase";
 import DeletePostModal from "./DeletePostModal";
 import { UserContext } from "../context/UserContext";
 
-const PostCard = ({ data }) => {
+const PostCard = ({ data, setOpenModal, setEditMode }) => {
   const { currentUser } = useContext(UserContext);
 
   const [showMenu, setShowMenu] = useState(false);
@@ -91,6 +91,11 @@ const PostCard = ({ data }) => {
                 <div className="absolute right-0 top-10 z-20 w-40 bg-white border border-[#E5E2EC] rounded-xl p-1.5">
                   {/* Edit */}
                   <button
+                    onClick={() => {
+                      setShowMenu(false);
+                      setOpenModal(true);
+                      setEditMode(data);
+                    }}
                     disabled={!isAuthor}
                     type="button"
                     className="w-full h-10 px-3 rounded-lg flex items-center gap-2.5 text-sm font-medium text-[#39364A] bg-white hover:bg-[#F8F7FC] hover:text-[#6D5DFB] transition cursor-pointer disabled:text-[#B2AEBB] disabled:bg-[#F8F7FC] disabled:cursor-not-allowed disabled:hover:text-[#B2AEBB]"
@@ -102,7 +107,10 @@ const PostCard = ({ data }) => {
                   {/* Delete */}
                   <button
                     disabled={!isAuthor}
-                    onClick={() => setOpenDeleteModal(true)}
+                    onClick={() => {
+                      setOpenDeleteModal(true);
+                      setShowMenu(false);
+                    }}
                     type="button"
                     className="w-full h-10 px-3 mt-1 rounded-lg flex items-center gap-2.5 text-sm font-medium text-[#39364A] bg-white hover:bg-red-50 hover:text-red-500 transition cursor-pointer disabled:text-[#B2AEBB] disabled:bg-[#F8F7FC] disabled:cursor-not-allowed disabled:hover:text-[#B2AEBB]"
                   >
@@ -139,10 +147,14 @@ const PostCard = ({ data }) => {
         <div className="px-4 sm:px-5 py-4 select-none">
           <button
             onClick={() => {
+              if (!currentUser) {
+                return;
+              }
+
               isLiked ? unlikePost(data.id) : likePost(data.id);
             }}
             type="button"
-            className={`flex items-center gap-2 px-3 h-9 rounded-lg cursor-pointer ${isLiked ? "text-[#6D5DFB]" : "text-[#77738A]"} hover:bg-[#F4F1FF] hover:text-[#6D5DFB] transition-all duration-200`}
+            className={`flex items-center gap-1.5 px-3 h-9 rounded-lg cursor-pointer ${isLiked ? "text-[#6D5DFB]" : "text-[#77738A]"} hover:bg-[#F4F1FF] hover:text-[#6D5DFB] transition-all duration-200`}
           >
             <i
               className={`ph${isLiked ? "-fill" : ""} ph-heart text-[21px]`}

@@ -10,6 +10,7 @@ const Home = () => {
 
   const [openModal, setOpenModal] = useState(false);
   const [openLoginModal, setOpenLoginModal] = useState(false);
+  const [editMode, setEditMode] = useState(null);
 
   const openCreatePostModal = () => {
     if (!currentUser) {
@@ -51,11 +52,23 @@ const Home = () => {
           </div>
 
           {posts.map((post) => {
-            return <PostCard key={post.id} data={post} />;
+            return (
+              <PostCard
+                key={post.id}
+                data={post}
+                setOpenModal={setOpenModal}
+                setEditMode={setEditMode}
+              />
+            );
           })}
         </div>
       </main>
-      <CreatePostModal openModal={openModal} setOpenModal={setOpenModal} />
+      <CreatePostModal
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        editMode={editMode}
+        setEditMode={setEditMode}
+      />
       <LoginRequiredModal
         openLoginModal={openLoginModal}
         setOpenLoginModal={setOpenLoginModal}
