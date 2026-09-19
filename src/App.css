@@ -6,7 +6,8 @@ html {
 
 @media (max-width:520px) {
     main {
-        padding-bottom: 60.6px;
+        padding-bottom: 50px;
+        padding-top: 60px;
     }
 
     .nav-links {

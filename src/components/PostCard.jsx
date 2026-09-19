@@ -131,13 +131,15 @@ const PostCard = ({ data, setOpenModal, setEditMode }) => {
           </div>
         </div>
 
-        <div className="px-[clamp(0.85rem,2vw,1.25rem)] mt-[clamp(0.7rem,1.8vw,0.875rem)]">
-          <img
-            src={data.image}
-            alt={data.title}
-            className="max-w-full max-h-[clamp(30rem,50vw,31.25rem)] object-cover rounded-[clamp(0.7rem,1.8vw,0.75rem)] mx-auto"
-          />
-        </div>
+        {data.image && (
+          <div className="px-[clamp(0.85rem,2vw,1.25rem)] mt-[clamp(0.7rem,1.8vw,0.875rem)]">
+            <img
+              src={data.image}
+              alt={data.title}
+              className="max-w-full max-h-[clamp(30rem,50vw,31.25rem)] object-cover rounded-[clamp(0.2rem,1.8vw,0.75rem)] mx-auto"
+            />
+          </div>
+        )}
 
         <div className="px-[clamp(0.85rem,2vw,1.25rem)] py-[clamp(0.7rem,1.8vw,1rem)] select-none">
           <button

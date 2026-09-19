@@ -23,8 +23,8 @@ const Home = () => {
 
   return (
     <>
-      <main className="bg-[#F8F7FC] overflow-y-scroll scrollbar-none">
-        <div className="mx-auto w-full max-w-[1920px] min-h-screen pb-[clamp(1rem,2vw,1.5rem)]">
+      <main className="bg-[#F8F7FC] overflow-y-scroll scrollbar-none pt-[70px]">
+        <div className="mx-auto w-full max-w-[1920px] min-h-[calc(100vh_-_130px)] sm:min-h-[calc(100vh_-_70px)] pb-[clamp(1rem,2vw,1.5rem)]">
           <Navbar />
 
           <div className="w-[calc(100%-clamp(1rem,4vw,2rem))] max-w-[800px] mx-auto bg-white border border-[#E5E2EC] rounded-[clamp(0.75rem,1.8vw,1rem)] p-[clamp(0.85rem,1.8vw,1.25rem)] my-[clamp(0.85rem,1.8vw,1.25rem)]">
