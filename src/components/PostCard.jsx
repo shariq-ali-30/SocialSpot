@@ -142,28 +142,31 @@ const PostCard = ({ data, setOpenModal, setEditMode }) => {
         )}
 
         <div className="px-[clamp(0.85rem,2vw,1.25rem)] py-[clamp(0.7rem,1.8vw,1rem)] select-none">
-          <button
-            onClick={() => {
-              if (!currentUser) {
-                return;
-              }
+  <button
+    onClick={() => {
+      if (!currentUser) {
+        return;
+      }
 
-              isLiked ? unlikePost(data.id) : likePost(data.id);
-            }}
-            type="button"
-            className={`flex items-center gap-[clamp(0.3rem,0.8vw,0.375rem)] px-[clamp(0.6rem,1.5vw,0.75rem)] h-[clamp(2.15rem,5vw,2.25rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] cursor-pointer ${
-              isLiked ? "text-[#6D5DFB]" : "text-[#77738A]"
-            } hover:bg-[#F4F1FF] hover:text-[#6D5DFB] transition-all duration-200`}
-          >
-            <i
-              className={`ph${isLiked ? "-fill" : ""} ph-heart text-[clamp(1.1rem,2.8vw,1.3125rem)]`}
-            ></i>
+      isLiked ? unlikePost(data.id) : likePost(data.id);
+    }}
+    type="button"
+    className={`flex items-center gap-[clamp(0.3rem,0.8vw,0.375rem)] px-[clamp(0.6rem,1.5vw,0.75rem)] h-[clamp(2.15rem,5vw,2.25rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] cursor-pointer ${
+      isLiked ? "text-[#6D5DFB]" : "text-[#77738A]"
+    } hover:bg-[#F4F1FF] hover:text-[#6D5DFB] transition-all duration-200`}
+  >
+    <i
+      key={isLiked ? "liked" : "unliked"}
+      className={`ph${isLiked ? "-fill" : ""} ph-heart text-[clamp(1.1rem,2.8vw,1.3125rem)] ${
+        isLiked ? "animate-[heartPop_0.15s_ease-out]" : ""
+      }`}
+    ></i>
 
-            <span className="text-[clamp(0.75rem,1.5vw,0.875rem)] font-medium">
-              {(data.likedBy || []).length} Likes
-            </span>
-          </button>
-        </div>
+    <span className="text-[clamp(0.75rem,1.5vw,0.875rem)] font-medium">
+      {(data.likedBy || []).length} Likes
+    </span>
+  </button>
+</div>
       </article>
 
       <DeletePostModal

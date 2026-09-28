@@ -26,12 +26,9 @@ const CreatePostModal = ({
   const imageRef = useRef();
 
   const createPost = async () => {
-    if (title) {
-      if (!description && !image) {
-        return document.getElementById("post-description").focus();
-      }
+    if (!title.trim() && !description.trim() && !image) {
+      return document.getElementById("post-title").focus()
     }
-
     setLoading(true);
 
     if (editMode) {
@@ -97,9 +94,8 @@ const CreatePostModal = ({
   return (
     <>
       <div
-        className={`fixed inset-0 z-50 flex items-center justify-center bg-[#17152A]/45 backdrop-blur-[3px] px-[clamp(0.75rem,3vw,1.5rem)] py-[clamp(0.75rem,3vw,1.5rem)] transition-all duration-300 ${
-          openModal ? "opacity-100 visible" : "opacity-0 invisible"
-        }`}
+        className={`fixed inset-0 z-50 flex items-center justify-center bg-[#17152A]/45 backdrop-blur-[3px] px-[clamp(0.75rem,3vw,1.5rem)] py-[clamp(0.75rem,3vw,1.5rem)] transition-all duration-300 ${openModal ? "opacity-100 visible" : "opacity-0 invisible"
+          }`}
         onClick={() => {
           if (!loading) {
             closeModal();
@@ -108,9 +104,8 @@ const CreatePostModal = ({
       >
         <div
           onClick={(e) => e.stopPropagation()}
-          className={`bg-white w-full max-w-[600px] rounded-[clamp(0.8rem,2vw,1rem)] border border-[#E5E2EC] shadow-[0_20px_50px_rgba(23,21,42,0.12)] overflow-y-auto max-h-[calc(100vh-clamp(1.5rem,6vw,3rem))] transform transition-all duration-300 scrollbar-none ${
-            openModal ? "scale-100 translate-y-0" : "scale-95 translate-y-8"
-          }`}
+          className={`bg-white w-full max-w-[600px] rounded-[clamp(0.8rem,2vw,1rem)] border border-[#E5E2EC] shadow-[0_20px_50px_rgba(23,21,42,0.12)] overflow-y-auto max-h-[calc(100vh-clamp(1.5rem,6vw,3rem))] transform transition-all duration-300 scrollbar-none ${openModal ? "scale-100 translate-y-0" : "scale-95 translate-y-8"
+            }`}
         >
           <div className="flex items-center justify-between px-[clamp(1rem,3vw,1.5rem)] py-[clamp(1rem,3vw,1.25rem)] border-b border-[#EAE7EF]">
             <div className="min-w-0">
@@ -137,6 +132,7 @@ const CreatePostModal = ({
 
               <input
                 disabled={loading}
+                autoComplete="off"
                 id="post-title"
                 onChange={(e) => setTitle(e.target.value)}
                 value={title}
@@ -153,6 +149,7 @@ const CreatePostModal = ({
 
               <textarea
                 disabled={loading}
+                autoComplete="off"
                 id="post-description"
                 onChange={(e) => setDescription(e.target.value)}
                 value={description}
@@ -205,7 +202,7 @@ const CreatePostModal = ({
 
             <button
               onClick={createPost}
-              disabled={(!title && !description && !image) || loading}
+              disabled={loading}
               className="relative h-[clamp(2.6rem,6vw,2.75rem)] px-[clamp(1rem,2.8vw,1.5rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] bg-[#6D5DFB] text-white font-semibold hover:bg-[#5D4DED] transition text-[clamp(0.75rem,1.5vw,0.875rem)] cursor-pointer shadow-sm disabled:cursor-not-allowed"
             >
               <span className={`${loading ? "invisible" : ""}`}>

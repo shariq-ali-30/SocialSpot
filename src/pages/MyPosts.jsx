@@ -13,8 +13,8 @@ const MyPosts = () => {
 
   return (
     <>
-      <main className="bg-[#F8F7FC] overflow-y-scroll scrollbar-none">
-        <div className="mx-auto w-full max-w-[1920px] min-h-screen pb-[clamp(1rem,2vw,1.5rem)]">
+      <main className="bg-[#F8F7FC] overflow-y-scroll scrollbar-none  pt-[70px]">
+        <div className="mx-auto w-full max-w-[1920px] min-h-[calc(100vh_-_130px)] sm:min-h-[calc(100vh_-_70px)] pb-[clamp(1rem,2vw,1.5rem)]">
           <Navbar />
 
           {loadingPosts ? (
