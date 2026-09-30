@@ -77,11 +77,13 @@ const CreatePostModal = ({
 
   const closeModal = () => {
     setOpenModal(false);
-    setTitle("");
-    setDescription("");
-    setImage(null);
-    imageRef.current.value = "";
-    setEditMode(null);
+    setTimeout(() => {
+      setTitle("");
+      setDescription("");
+      setImage(null);
+      imageRef.current.value = "";
+      setEditMode(null);
+    }, 500);
   };
 
   useEffect(() => {
@@ -155,7 +157,7 @@ const CreatePostModal = ({
                 value={description}
                 placeholder="Write your post..."
                 rows="4"
-                className="w-full px-[clamp(0.8rem,2vw,1rem)] py-[clamp(0.65rem,1.5vw,0.75rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] border-[1.5px] border-[#DDD9E5] bg-white text-[clamp(0.78rem,1.5vw,0.875rem)] text-[#292638] placeholder:text-[#AAA6B5] outline-none resize-none focus:border-[#6D5DFB] transition leading-5"
+                className="w-full px-[clamp(0.8rem,2vw,1rem)] py-[clamp(0.65rem,1.5vw,0.75rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] border-[1.5px] border-[#DDD9E5] bg-white text-[clamp(0.78rem,1.5vw,0.875rem)] text-[#292638] placeholder:text-[#AAA6B5] outline-none resize-none focus:border-[#6D5DFB] transition leading-5 scrollbar-none"
               ></textarea>
             </div>
 

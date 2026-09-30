@@ -9,6 +9,7 @@ const PostCard = ({ data, setOpenModal, setEditMode }) => {
 
   const [showMenu, setShowMenu] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [seeMore, setSeeMore] = useState(false)
 
   const date = data.createdAt?.toDate().toLocaleString("en-PK", {
     month: "short",
@@ -125,9 +126,27 @@ const PostCard = ({ data, setOpenModal, setEditMode }) => {
               {data.title}
             </h2>
 
-            <p className="mt-[clamp(0.3rem,0.8vw,0.375rem)] text-[clamp(0.78rem,1.5vw,0.875rem)] leading-[clamp(1.25rem,2.5vw,1.3125rem)] text-[#77738A]">
+            <p
+              className={`mt-[clamp(0.3rem,0.8vw,0.375rem)] text-[clamp(0.78rem,1.5vw,0.875rem)] leading-[clamp(1.25rem,2.5vw,1.3125rem)] text-[#77738A] ${!seeMore
+                ? "max-h-[2.6rem]"
+                : "max-h-[clamp(12rem,30vw,25rem)]"
+                } overflow-hidden transition-[max-height] duration-300 ease-in-out`}
+            >
               {data.description}
             </p>
+
+            {data.description.length > 261 && <button
+              type="button"
+              onClick={() => setSeeMore(!seeMore)}
+              className="my-[-10px] select-none inline-flex items-center gap-1 text-[clamp(0.72rem,1.4vw,0.8rem)] font-semibold text-[#6D5DFB] cursor-pointer"
+            >
+              <span>{seeMore ? "Show less" : "Read more"}</span>
+
+              <i
+                className={`ph-bold ${seeMore ? "ph-caret-up" : "ph-caret-down"
+                  } text-[clamp(0.65rem,1.3vw,0.75rem)]`}
+              ></i>
+            </button>}
           </div>
         </div>
 
@@ -142,31 +161,29 @@ const PostCard = ({ data, setOpenModal, setEditMode }) => {
         )}
 
         <div className="px-[clamp(0.85rem,2vw,1.25rem)] py-[clamp(0.7rem,1.8vw,1rem)] select-none">
-  <button
-    onClick={() => {
-      if (!currentUser) {
-        return;
-      }
+          <button
+            onClick={() => {
+              if (!currentUser) {
+                return;
+              }
 
-      isLiked ? unlikePost(data.id) : likePost(data.id);
-    }}
-    type="button"
-    className={`flex items-center gap-[clamp(0.3rem,0.8vw,0.375rem)] px-[clamp(0.6rem,1.5vw,0.75rem)] h-[clamp(2.15rem,5vw,2.25rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] cursor-pointer ${
-      isLiked ? "text-[#6D5DFB]" : "text-[#77738A]"
-    } hover:bg-[#F4F1FF] hover:text-[#6D5DFB] transition-all duration-200`}
-  >
-    <i
-      key={isLiked ? "liked" : "unliked"}
-      className={`ph${isLiked ? "-fill" : ""} ph-heart text-[clamp(1.1rem,2.8vw,1.3125rem)] ${
-        isLiked ? "animate-[heartPop_0.15s_ease-out]" : ""
-      }`}
-    ></i>
+              isLiked ? unlikePost(data.id) : likePost(data.id);
+            }}
+            type="button"
+            className={`flex items-center gap-[clamp(0.3rem,0.8vw,0.375rem)] px-[clamp(0.6rem,1.5vw,0.75rem)] h-[clamp(2.15rem,5vw,2.25rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] cursor-pointer ${isLiked ? "text-[#6D5DFB]" : "text-[#77738A]"
+              } hover:bg-[#F4F1FF] hover:text-[#6D5DFB] transition-all duration-200`}
+          >
+            <i
+              key={isLiked ? "liked" : "unliked"}
+              className={`ph${isLiked ? "-fill" : ""} ph-heart text-[clamp(1.1rem,2.8vw,1.3125rem)] ${isLiked ? "animate-[heartPop_0.15s_ease-out]" : ""
+                }`}
+            ></i>
 
-    <span className="text-[clamp(0.75rem,1.5vw,0.875rem)] font-medium">
-      {(data.likedBy || []).length} Likes
-    </span>
-  </button>
-</div>
+            <span className="text-[clamp(0.75rem,1.5vw,0.875rem)] font-medium">
+              {(data.likedBy || []).length} Likes
+            </span>
+          </button>
+        </div>
       </article>
 
       <DeletePostModal

@@ -4,6 +4,29 @@ html {
   scrollbar-width: none;
 }
 
+#post-description::-webkit-scrollbar {
+  width: 5px;
+}
+
+#post-description::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#post-description::-webkit-scrollbar-thumb {
+  background: #D8D3F8;
+  border-radius: 999px;
+}
+
+#post-description::-webkit-scrollbar-thumb:hover {
+  background: #6D5DFB;
+}
+
+/* Firefox */
+#post-description {
+  scrollbar-width: thin;
+  scrollbar-color: #D8D3F8 transparent;
+}
+
 @keyframes heartPop {
   0% {
     transform: scale(1);
