@@ -48,26 +48,6 @@ The application includes user authentication, Google login, profile information,
 - Reusable React components
 - Protected post editing and deletion for post authors
 
-## What I Learned
-
-Through this project, I learned:
-
-- How to build a complete social media application using React
-- How to create reusable React components
-- How to manage global state using React Context
-- How to use Firebase Authentication for user registration and login
-- How to implement Google authentication with Firebase
-- How to work with Firebase Firestore
-- How to create and update Firestore documents
-- How to listen for real-time Firestore updates using `onSnapshot`
-- How to create, edit, delete, like, and unlike posts
-- How to upload images to Cloudinary
-- How to work with file uploads using `FormData`
-- How to manage user sessions using Local Storage
-- How to use React state and effects to manage application data
-- How to build responsive interfaces using Tailwind CSS
-- How to organize a React project using components, pages, context, and helper functions
-
 ## Author
 
 **Shariq Ali**
