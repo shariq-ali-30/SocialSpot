@@ -75,7 +75,7 @@ const Navbar = () => {
           {currentUser ? (
             <>
               <div className="items-center gap-[clamp(0.4rem,1vw,0.5rem)] flex">
-                <div className="h-[clamp(2.25rem,5vw,2.75rem)] w-[clamp(2.25rem,5vw,2.75rem)] flex justify-center items-center overflow-hidden rounded-full border border-[#E7E4F0] bg-[#F3F1FA]">
+                <div className="h-[clamp(2.25rem,5vw,2.75rem)] w-[clamp(2.25rem,5vw,2.75rem)] flex justify-center items-center overflow-hidden rounded-full bg-[#F3F1FA]">
                   <img
                     src={
                       userData?.profileImage ||

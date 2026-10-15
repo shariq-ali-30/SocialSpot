@@ -3,28 +3,42 @@
 html {
   scrollbar-width: none;
 }
+/* Default scrollbar: transparent track */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #d8d3f8 transparent;
+}
 
-#post-description::-webkit-scrollbar {
+.custom-scrollbar::-webkit-scrollbar {
   width: 5px;
+  height: 5px;
 }
 
-#post-description::-webkit-scrollbar-track {
-  background: transparent;
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
 }
 
-#post-description::-webkit-scrollbar-thumb {
-  background: #D8D3F8;
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #d8d3f8;
   border-radius: 999px;
 }
 
-#post-description::-webkit-scrollbar-thumb:hover {
-  background: #6D5DFB;
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #b8aef0;
 }
 
-/* Firefox */
-#post-description {
-  scrollbar-width: thin;
-  scrollbar-color: #D8D3F8 transparent;
+/* Sirf comments section */
+.custom-scrollbar.comments-scrollbar {
+  scrollbar-color: #d8d3f8 #fdfcff;
+}
+
+.custom-scrollbar.comments-scrollbar::-webkit-scrollbar-track,
+.custom-scrollbar.comments-scrollbar::-webkit-scrollbar-track-piece {
+  background: #fdfcff !important;
+}
+
+.custom-scrollbar.comments-scrollbar::-webkit-scrollbar-track {
+  background: #fdfcff;
 }
 
 @keyframes heartPop {

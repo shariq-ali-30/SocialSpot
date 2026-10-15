@@ -27,7 +27,7 @@ const CreatePostModal = ({
 
   const createPost = async () => {
     if (!title.trim() && !description.trim() && !image) {
-      return document.getElementById("post-title").focus()
+      return document.getElementById("post-title").focus();
     }
     setLoading(true);
 
@@ -96,8 +96,9 @@ const CreatePostModal = ({
   return (
     <>
       <div
-        className={`fixed inset-0 z-50 flex items-center justify-center bg-[#17152A]/45 backdrop-blur-[3px] px-[clamp(0.75rem,3vw,1.5rem)] py-[clamp(0.75rem,3vw,1.5rem)] transition-all duration-300 ${openModal ? "opacity-100 visible" : "opacity-0 invisible"
-          }`}
+        className={`fixed inset-0 z-50 flex items-center justify-center bg-[#17152A]/45 backdrop-blur-[3px] px-[clamp(0.75rem,3vw,1.5rem)] py-[clamp(0.75rem,3vw,1.5rem)] transition-all duration-300 ${
+          openModal ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
         onClick={() => {
           if (!loading) {
             closeModal();
@@ -106,8 +107,9 @@ const CreatePostModal = ({
       >
         <div
           onClick={(e) => e.stopPropagation()}
-          className={`bg-white w-full max-w-[600px] rounded-[clamp(0.8rem,2vw,1rem)] border border-[#E5E2EC] shadow-[0_20px_50px_rgba(23,21,42,0.12)] overflow-y-auto max-h-[calc(100vh-clamp(1.5rem,6vw,3rem))] transform transition-all duration-300 scrollbar-none ${openModal ? "scale-100 translate-y-0" : "scale-95 translate-y-8"
-            }`}
+          className={`bg-white w-full max-w-[600px] rounded-[clamp(0.8rem,2vw,1rem)] border border-[#E5E2EC] shadow-[0_20px_50px_rgba(23,21,42,0.12)] overflow-y-auto max-h-[calc(100vh-clamp(1.5rem,6vw,3rem))] transform transition-all duration-300 scrollbar-none ${
+            openModal ? "scale-100 translate-y-0" : "scale-95 translate-y-8"
+          }`}
         >
           <div className="flex items-center justify-between px-[clamp(1rem,3vw,1.5rem)] py-[clamp(1rem,3vw,1.25rem)] border-b border-[#EAE7EF]">
             <div className="min-w-0">
@@ -127,9 +129,7 @@ const CreatePostModal = ({
             <div>
               <label className="block text-[clamp(0.75rem,1.5vw,0.875rem)] font-medium text-[#39364A] mb-[clamp(0.4rem,1vw,0.5rem)]">
                 Title{" "}
-                <span className="font-normal text-[#9A96A8]">
-                  (Optional)
-                </span>
+                <span className="font-normal text-[#9A96A8]">(Optional)</span>
               </label>
 
               <input
@@ -140,7 +140,7 @@ const CreatePostModal = ({
                 value={title}
                 type="text"
                 placeholder="Enter post title"
-                className="w-full h-[clamp(2.75rem,7vw,3rem)] px-[clamp(0.8rem,2vw,1rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] border-[1.5px] border-[#DDD9E5] bg-white text-[clamp(0.78rem,1.5vw,0.875rem)] text-[#292638] placeholder:text-[#AAA6B5] outline-none focus:border-[#6D5DFB] transition"
+                className="w-full caret-[#6D5DFB] h-[clamp(2.75rem,7vw,3rem)] px-[clamp(0.8rem,2vw,1rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] border-[1.5px] border-[#DDD9E5] bg-white text-[clamp(0.78rem,1.5vw,0.875rem)] text-[#292638] placeholder:text-[#AAA6B5] outline-none focus:border-[#6D5DFB] transition"
               />
             </div>
 
@@ -157,7 +157,7 @@ const CreatePostModal = ({
                 value={description}
                 placeholder="Write your post..."
                 rows="4"
-                className="w-full px-[clamp(0.8rem,2vw,1rem)] py-[clamp(0.65rem,1.5vw,0.75rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] border-[1.5px] border-[#DDD9E5] bg-white text-[clamp(0.78rem,1.5vw,0.875rem)] text-[#292638] placeholder:text-[#AAA6B5] outline-none resize-none focus:border-[#6D5DFB] transition leading-5 scrollbar-none"
+                className="w-full caret-[#6D5DFB] px-[clamp(0.8rem,2vw,1rem)] py-[clamp(0.65rem,1.5vw,0.75rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] border-[1.5px] border-[#DDD9E5] bg-white text-[clamp(0.78rem,1.5vw,0.875rem)] text-[#292638] placeholder:text-[#AAA6B5] outline-none resize-none focus:border-[#6D5DFB] transition leading-5 scrollbar-none"
               ></textarea>
             </div>
 
