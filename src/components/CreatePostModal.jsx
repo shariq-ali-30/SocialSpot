@@ -40,7 +40,7 @@ const CreatePostModal = ({
         imageUrl = await uploadImage(image);
       }
 
-      await updateDoc(docRef, {
+      updateDoc(docRef, {
         title: title,
         description: description,
         image: imageUrl,
@@ -56,7 +56,7 @@ const CreatePostModal = ({
     try {
       let imageUrl = image ? await uploadImage(image) : "";
 
-      await addDoc(collection(db, "posts"), {
+      addDoc(collection(db, "posts"), {
         authorId: currentUser,
         authorProfile: userData.profileImage || "",
         authorName: userData.name,
@@ -64,6 +64,7 @@ const CreatePostModal = ({
         description: description,
         image: imageUrl,
         likedBy: [],
+        comments: [],
         createdAt: serverTimestamp(),
       });
 
@@ -157,7 +158,7 @@ const CreatePostModal = ({
                 value={description}
                 placeholder="Write your post..."
                 rows="4"
-                className="w-full caret-[#6D5DFB] px-[clamp(0.8rem,2vw,1rem)] py-[clamp(0.65rem,1.5vw,0.75rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] border-[1.5px] border-[#DDD9E5] bg-white text-[clamp(0.78rem,1.5vw,0.875rem)] text-[#292638] placeholder:text-[#AAA6B5] outline-none resize-none focus:border-[#6D5DFB] transition leading-5 scrollbar-none"
+                className="w-full custom-scrollbar caret-[#6D5DFB] px-[clamp(0.8rem,2vw,1rem)] py-[clamp(0.65rem,1.5vw,0.75rem)] rounded-[clamp(0.5rem,1.2vw,0.625rem)] border-[1.5px] border-[#DDD9E5] bg-white text-[clamp(0.78rem,1.5vw,0.875rem)] text-[#292638] placeholder:text-[#AAA6B5] outline-none resize-none focus:border-[#6D5DFB] transition leading-5 scrollbar-none"
               ></textarea>
             </div>
 

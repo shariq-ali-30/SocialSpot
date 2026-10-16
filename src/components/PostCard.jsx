@@ -1,8 +1,9 @@
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import React, { useContext, useState } from "react";
+import { deleteDoc, doc, Timestamp, updateDoc } from "firebase/firestore";
+import { useContext, useState } from "react";
+import { UserContext } from "../context/UserContext";
 import { db } from "../firebase/firebase";
 import DeletePostModal from "./DeletePostModal";
-import { UserContext } from "../context/UserContext";
+import PostComment from "./PostComment";
 
 const PostCard = ({ data, setOpenModal, setEditMode }) => {
   const { currentUser, userData } = useContext(UserContext);
@@ -11,65 +12,7 @@ const PostCard = ({ data, setOpenModal, setEditMode }) => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [seeMore, setSeeMore] = useState(false);
   const [showComments, setShowComments] = useState(false);
-
-  const dummyComments = [
-    {
-      id: 1,
-      name: "Ayesha Khan",
-      avatar: "https://i.pravatar.cc/100?img=47",
-      time: "2m ago",
-      text: "This is such a great post! Really loved the idea behind it. ❤️",
-      likes: 12,
-    },
-    {
-      id: 2,
-      name: "Ali Ahmed",
-      avatar: "https://i.pravatar.cc/100?img=12",
-      time: "15m ago",
-      text: "Amazing work! Keep sharing more content like this. 👏",
-      likes: 5,
-    },
-    {
-      id: 3,
-      name: "Sara Malik",
-      avatar: "https://i.pravatar.cc/100?img=32",
-      time: "1h ago",
-      text: "I completely agree with this. Thanks for sharing your thoughts!",
-      likes: 8,
-    },
-    {
-      id: 4,
-      name: "Hamza Ali",
-      avatar: "https://i.pravatar.cc/100?img=13",
-      time: "3h ago",
-      text: "Very helpful post! Looking forward to seeing more updates.",
-      likes: 3,
-    },
-    {
-      id: 4,
-      name: "Hamza Ali",
-      avatar: "https://i.pravatar.cc/100?img=13",
-      time: "3h ago",
-      text: "Very helpful post! Looking forward to seeing more updates.",
-      likes: 3,
-    },
-    {
-      id: 4,
-      name: "Hamza Ali",
-      avatar: "https://i.pravatar.cc/100?img=13",
-      time: "3h ago",
-      text: "Very helpful post! Looking forward to seeing more updates.",
-      likes: 3,
-    },
-    {
-      id: 4,
-      name: "Hamza Ali",
-      avatar: "https://i.pravatar.cc/100?img=13",
-      time: "3h ago",
-      text: "Very helpful post! Looking forward to seeing more updates.",
-      likes: 3,
-    },
-  ];
+  const [commentText, setCommentText] = useState("");
 
   const getTimeAgo = (timestamp) => {
     if (!timestamp) return "";
@@ -127,6 +70,38 @@ const PostCard = ({ data, setOpenModal, setEditMode }) => {
     });
   };
 
+  const createComment = () => {
+    if (!commentText) {
+      return document.getElementById("commentInput").focus();
+    }
+
+    const newComment = {
+      authorId: currentUser,
+      authorProfile: userData.profileImage || "",
+      authorName: userData.name,
+      commentText: commentText,
+      createdAt: Timestamp.now(),
+      likedBy: [],
+    };
+
+    const docRef = doc(db, "posts", data.id);
+    updateDoc(docRef, {
+      comments: [newComment, ...data.comments],
+    });
+    setCommentText("");
+  };
+
+  const deleteComment = (createdAt) => {
+    const filteredComments = data.comments.filter(
+      (comment) => comment.createdAt !== createdAt,
+    );
+
+    const docRef = doc(db, "posts", data.id);
+    updateDoc(docRef, {
+      comments: filteredComments,
+    });
+  };
+
   return (
     <>
       <article className="w-[calc(100%-clamp(1rem,4vw,2rem))] max-w-[800px] mx-auto bg-white border border-[#E5E2EC] rounded-[clamp(0.8rem,1.8vw,1rem)] mb-[clamp(0.85rem,1.8vw,1.25rem)] mt-[clamp(0.85rem,1.8vw,1.25rem)] overflow-hidden">
@@ -163,7 +138,7 @@ const PostCard = ({ data, setOpenModal, setEditMode }) => {
               <button
                 type="button"
                 onClick={() => setShowMenu(!showMenu)}
-                className="w-[clamp(2rem,5vw,2.25rem)] h-[clamp(2rem,5vw,2.25rem)] flex items-center justify-center rounded-[clamp(0.5rem,1.2vw,0.625rem)] text-[#77738A] hover:bg-[#F8F7FC] hover:text-[#17152A] transition cursor-pointer"
+                className="w-[clamp(2rem,5vw,2.25rem)] h-[clamp(2rem,5vw,2.25rem)] flex items-center justify-center rounded-[clamp(0.5rem,1.2vw,0.625rem)] text-[#77738A] hover:bg-[#F8F7FC] hover:text-[#6D5DFB] transition cursor-pointer"
               >
                 <i className="ph-bold ph-dots-three-vertical text-[clamp(1.25rem,3vw,1.5rem)]"></i>
               </button>
@@ -185,11 +160,11 @@ const PostCard = ({ data, setOpenModal, setEditMode }) => {
                   </button>
 
                   <button
-                    disabled={!isAuthor}
                     onClick={() => {
                       setOpenDeleteModal(true);
                       setShowMenu(false);
                     }}
+                    disabled={!isAuthor}
                     type="button"
                     className="w-full h-[clamp(2.35rem,6vw,2.5rem)] px-[clamp(0.65rem,1.5vw,0.75rem)] rounded-[clamp(0.45rem,1vw,0.5rem)] mt-[clamp(0.2rem,0.5vw,0.25rem)] flex items-center gap-[clamp(0.5rem,1.2vw,0.625rem)] text-[clamp(0.78rem,1.5vw,0.875rem)] font-medium text-[#39364A] bg-white hover:bg-red-50 hover:text-red-500 transition cursor-pointer disabled:text-[#B2AEBB] disabled:bg-[#F8F7FC] disabled:cursor-not-allowed disabled:hover:text-[#B2AEBB]"
                   >
@@ -286,24 +261,30 @@ const PostCard = ({ data, setOpenModal, setEditMode }) => {
               <i className="ph ph-chat-circle text-[clamp(1.1rem,2.8vw,1.3125rem)]"></i>
 
               <span className="text-[clamp(0.75rem,1.5vw,0.875rem)] font-medium">
-                5 Comments
+                {data.comments.length} Comments
               </span>
             </button>
           </div>
         </div>
 
         {/* Comments Section UI */}
+        {showComments && (
+          <div className="w-full border-t border-gray-200"></div>
+        )}
         <div
           className={`overflow-x-hidden overflow-y-auto bg-[#FDFCFF] custom-scrollbar comments-scrollbar transition-[max-height] duration-200 ease-in-out ${
             showComments ? "max-h-[500px]" : "max-h-0"
           }`}
         >
-          <div className="border-t border-gray-200">
-            <div className="border-t border-[#EAE7EF] bg-[#FDFCFF] px-[clamp(0.85rem,2vw,1.25rem)] py-[clamp(1rem,2.5vw,1.25rem)]">
+          <div>
+            <div className="bg-[#FDFCFF] px-[clamp(0.85rem,2vw,1.25rem)] py-[clamp(1rem,2.5vw,1.25rem)]">
               {/* Comment Input UI */}
               <div className="flex items-start gap-3">
                 <div className="flex-1 min-w-0">
                   <textarea
+                    id="commentInput"
+                    onChange={(e) => setCommentText(e.target.value)}
+                    value={commentText}
                     rows={2}
                     placeholder={
                       currentUser
@@ -316,6 +297,7 @@ const PostCard = ({ data, setOpenModal, setEditMode }) => {
 
                   <div className="flex justify-end mt-2">
                     <button
+                      onClick={createComment}
                       type="button"
                       disabled={!currentUser}
                       className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#6D5DFB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#5D4DED] disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
@@ -327,68 +309,16 @@ const PostCard = ({ data, setOpenModal, setEditMode }) => {
                 </div>
               </div>
 
-              {/* Empty Comments State */}
               {/* Comments List */}
               <div className="mt-5 space-y-5">
-                {dummyComments.length > 0 ? (
-                  dummyComments.map((comment) => (
-                    <div key={comment.id} className="flex items-start gap-3">
-                      {/* Comment Avatar */}
-                      <img
-                        src={comment.avatar}
-                        alt={comment.name}
-                        className="w-9 h-9 rounded-full object-cover shrink-0 ring-2 ring-white"
-                      />
-
-                      {/* Comment Content */}
-                      <div className="flex-1 min-w-0">
-                        <div className="bg-white border border-[#EAE7EF] rounded-2xl rounded-tl-md px-4 py-3">
-                          {/* Name and Time */}
-                          <div className="flex items-center flex-wrap gap-x-2 gap-y-1">
-                            <h4 className="text-sm font-semibold text-[#292638]">
-                              {comment.name}
-                            </h4>
-
-                            <span className="text-[#C1BDCA] text-xs">•</span>
-
-                            <span className="text-xs text-[#9A96A8]">
-                              {comment.time}
-                            </span>
-                          </div>
-
-                          {/* Comment Text */}
-                          <p className="mt-1.5 text-sm leading-6 text-[#625E72] break-words">
-                            {comment.text}
-                          </p>
-                        </div>
-
-                        {/* Comment Actions */}
-                        <div className="flex items-center gap-4 px-2 mt-2">
-                          <span className="text-xs font-semibold text-[#77738A]">
-                            Like
-                          </span>
-
-                          <div className="flex items-center gap-1 text-[#9A96A8]">
-                            <i className="ph ph-heart text-sm"></i>
-
-                            <span className="text-xs">{comment.likes}</span>
-                          </div>
-
-                          <span className="text-xs font-semibold text-[#77738A]">
-                            Reply
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* More Options */}
-                      <button
-                        type="button"
-                        aria-label={`More options for ${comment.name}'s comment`}
-                        className="w-8 h-8 flex items-center justify-center rounded-lg text-[#A7A2B2] hover:bg-white hover:text-[#6D5DFB] transition shrink-0"
-                      >
-                        <i className="ph-bold ph-dots-three text-lg"></i>
-                      </button>
-                    </div>
+                {data.comments.length > 0 ? (
+                  data.comments.map((comment, idx) => (
+                    <PostComment
+                      key={idx}
+                      comment={comment}
+                      getTimeAgo={getTimeAgo}
+                      deleteComment={deleteComment}
+                    />
                   ))
                 ) : (
                   /* Empty Comments State */
