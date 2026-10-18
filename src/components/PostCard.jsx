@@ -109,14 +109,19 @@ const PostCard = ({ data, setOpenModal, setEditMode }) => {
         <div className="px-[clamp(0.85rem,2vw,1.25rem)] pt-[clamp(0.85rem,2vw,1.25rem)]">
           <div className="flex items-start justify-between gap-[clamp(0.5rem,1.5vw,0.75rem)]">
             <div className="flex items-center gap-[clamp(0.6rem,1.5vw,0.75rem)] min-w-0">
-              <img
-                src={
-                  data.authorProfile ||
-                  "https://res.cloudinary.com/h9rncg6u/image/upload/v1789618750/nzcseilvsvwbluzwexmy.jpg"
-                }
-                alt={data.authorName}
-                className="w-[clamp(2.5rem,5vw,2.75rem)] h-[clamp(2.5rem,5vw,2.75rem)] rounded-full object-cover shrink-0"
-              />
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#E5DFFF] bg-[#F0ECFF]">
+                {data.authorProfile ? (
+                  <img
+                    src={data.authorProfile}
+                    alt={data.authorName}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <span className="text-2xl font-semibold uppercase text-[#5B4BDB] mb-0.5">
+                    {data.authorName.trim().charAt(0) || ""}
+                  </span>
+                )}
+              </div>
 
               <div className="min-w-0">
                 <h3 className="text-[clamp(0.875rem,1.8vw,1rem)] font-semibold text-[#17152A] truncate">
@@ -134,7 +139,7 @@ const PostCard = ({ data, setOpenModal, setEditMode }) => {
             </div>
 
             {/* Post Menu */}
-            <div className="relative shrink-0">
+            <div className="relative shrink-0 mr-[-8px]">
               <button
                 type="button"
                 onClick={() => setShowMenu(!showMenu)}
@@ -312,14 +317,19 @@ const PostCard = ({ data, setOpenModal, setEditMode }) => {
               {/* Comments List */}
               <div className="mt-5 space-y-5">
                 {data.comments.length > 0 ? (
-                  data.comments.map((comment, idx) => (
-                    <PostComment
-                      key={idx}
-                      comment={comment}
-                      getTimeAgo={getTimeAgo}
-                      deleteComment={deleteComment}
-                    />
-                  ))
+                  data.comments.map((comment, idx) => {
+                    const isAuthor = comment.authorId === currentUser;
+                    return (
+                      <PostComment
+                        key={idx}
+                        comment={comment}
+                        getTimeAgo={getTimeAgo}
+                        deleteComment={deleteComment}
+                        isAuthor={isAuthor}
+                        postId={data.id}
+                      />
+                    );
+                  })
                 ) : (
                   /* Empty Comments State */
                   <div className="flex flex-col items-center justify-center py-7 text-center">

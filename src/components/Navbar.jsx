@@ -1,17 +1,23 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import Logo from "../images/logo.png";
+import { signOut } from "firebase/auth";
 import { useContext } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
+import { auth } from "../firebase/firebase";
+import Logo from "../images/logo.png";
 
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { currentUser, setCurrentUser, userData } = useContext(UserContext);
+  const { currentUser, userData } = useContext(UserContext);
 
-  const logoutHandler = () => {
-    setCurrentUser(null);
-    navigate("/login");
+  const logoutHandler = async () => {
+    try {
+      await signOut(auth);
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   const navItems = [
@@ -71,19 +77,22 @@ const Navbar = () => {
           })}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-[clamp(0.4rem,1.5vw,0.75rem)]">
+        <div className="flex shrink-0 items-center justify-center gap-[clamp(0.4rem,1.5vw,0.75rem)]">
           {currentUser ? (
             <>
               <div className="items-center gap-[clamp(0.4rem,1vw,0.5rem)] flex">
-                <div className="h-[clamp(2.25rem,5vw,2.75rem)] w-[clamp(2.25rem,5vw,2.75rem)] flex justify-center items-center overflow-hidden rounded-full bg-[#F3F1FA]">
-                  <img
-                    src={
-                      userData?.profileImage ||
-                      "https://res.cloudinary.com/h9rncg6u/image/upload/v1789618750/nzcseilvsvwbluzwexmy.jpg"
-                    }
-                    alt={userData?.name || "User"}
-                    className="w-full h-full object-cover"
-                  />
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#E5DFFF] bg-[#F0ECFF]">
+                  {userData?.profileImage ? (
+                    <img
+                      src={userData.profileImage}
+                      alt={userData?.name || "User"}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-2xl font-semibold uppercase text-[#5B4BDB] mb-0.5">
+                      {userData?.name?.trim()?.charAt(0) || ""}
+                    </span>
+                  )}
                 </div>
               </div>
 

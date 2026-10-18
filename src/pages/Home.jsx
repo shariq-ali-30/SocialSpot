@@ -29,15 +29,18 @@ const Home = () => {
 
           <div className="w-[calc(100%-clamp(1rem,4vw,2rem))] max-w-[800px] mx-auto bg-white border border-[#E5E2EC] rounded-[clamp(0.75rem,1.8vw,1rem)] p-[clamp(0.85rem,1.8vw,1.25rem)] my-[clamp(0.85rem,1.8vw,1.25rem)]">
             <div className="flex items-center gap-[clamp(0.6rem,1.5vw,0.75rem)]">
-              <div className="w-[clamp(2.5rem,5vw,2.75rem)] h-[clamp(2.5rem,5vw,2.75rem)] rounded-full overflow-hidden shrink-0 bg-[#F8F7FC]">
-                <img
-                  src={
-                    userData?.profileImage ||
-                    "https://res.cloudinary.com/h9rncg6u/image/upload/v1789618750/nzcseilvsvwbluzwexmy.jpg"
-                  }
-                  alt={userData?.name || "User"}
-                  className="w-full h-full object-cover"
-                />
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#E5DFFF] bg-[#F0ECFF]">
+                {userData?.profileImage ? (
+                  <img
+                    src={userData.profileImage}
+                    alt={userData?.name || "User"}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <span className="text-2xl font-semibold uppercase text-[#5B4BDB] mb-0.5">
+                    {userData?.name?.trim()?.charAt(0) || ""}
+                  </span>
+                )}
               </div>
 
               <button

@@ -7,28 +7,28 @@ import {
   query,
 } from "firebase/firestore";
 import { createContext, useEffect, useState } from "react";
-import { db } from "../firebase/firebase";
+import { auth, db } from "../firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-  if (!localStorage.getItem("currentUser")) {
-    localStorage.setItem("currentUser", JSON.stringify(null));
-  }
-
-  const [currentUser, setCurrentUser] = useState(
-    JSON.parse(localStorage.getItem("currentUser")),
-  );
+  const [currentUser, setCurrentUser] = useState(JSON.parse(null));
 
   const [userData, setUserData] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loadingPosts, setLoadingPosts] = useState(false);
 
-  const getUser = async () => {
-    const docRef = doc(db, "users", currentUser);
+  const getUser = async (uid) => {
+    if (!uid) {
+      setUserData(null);
+      return;
+    }
+
+    const docRef = doc(db, "users", uid);
     const docSnap = await getDoc(docRef);
 
-    setUserData(docSnap.data());
+    setUserData(docSnap.exists() ? docSnap.data() : null);
   };
 
   const getPosts = () => {
@@ -48,12 +48,24 @@ const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    localStorage.setItem("currentUser", JSON.stringify(currentUser));
-    getUser();
-    const unsub = getPosts();
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
 
-    return () => unsub();
-  }, [currentUser]);
+      if (user) {
+        getUser(user.uid);
+      } else {
+        setUserData(null);
+      }
+    });
+
+    const unsubscribePosts = getPosts();
+
+    return () => {
+      unsubscribeAuth();
+      unsubscribePosts();
+    };
+  }, []);
+
   return (
     <UserContext.Provider
       value={{ currentUser, setCurrentUser, userData, posts, loadingPosts }}
