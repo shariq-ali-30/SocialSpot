@@ -89,8 +89,10 @@ const Navbar = () => {
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <span className="text-2xl font-semibold uppercase text-[#5B4BDB] mb-0.5">
-                      {userData?.name?.trim()?.charAt(0) || ""}
+                    <span className="text-2xl font-semibold uppercase text-[#5B4BDB] leading-none">
+                      {userData?.name?.trim()?.charAt(0) || (
+                        <i className="ph-bold ph-user"></i>
+                      )}
                     </span>
                   )}
                 </div>

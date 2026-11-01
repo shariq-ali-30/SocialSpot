@@ -1,18 +1,7 @@
-import React, { useContext, useState } from "react";
-import { UserContext } from "../context/UserContext";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase/firebase";
+import { useState } from "react";
 
-const PostComment = ({
-  comment,
-  getTimeAgo,
-  deleteComment,
-  isAuthor,
-  postId,
-}) => {
-  const { currentUser } = useContext(UserContext);
+const PostComment = ({ comment, getTimeAgo, deleteComment, isAuthor }) => {
   const [showCommentsOption, setShowCommentsOption] = useState(false);
-  const isLiked = comment.likedBy.find((authorId) => authorId === currentUser);
 
   return (
     <div className="flex items-start gap-3">
@@ -25,7 +14,7 @@ const PostComment = ({
             className="h-full w-full object-cover"
           />
         ) : (
-          <span className="text-xl font-semibold uppercase text-[#5B4BDB] mb-0.5">
+          <span className="text-xl font-semibold uppercase text-[#5B4BDB]">
             {comment.authorName.trim().charAt(0) || ""}
           </span>
         )}

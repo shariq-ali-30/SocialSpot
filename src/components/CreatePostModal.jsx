@@ -44,7 +44,6 @@ const CreatePostModal = ({
         title: title,
         description: description,
         image: imageUrl,
-        createdAt: serverTimestamp(),
       });
 
       setEditMode(null);
@@ -129,8 +128,7 @@ const CreatePostModal = ({
           <div className="p-[clamp(1rem,3vw,1.5rem)] flex flex-col gap-[clamp(1rem,2.5vw,1.25rem)]">
             <div>
               <label className="block text-[clamp(0.75rem,1.5vw,0.875rem)] font-medium text-[#39364A] mb-[clamp(0.4rem,1vw,0.5rem)]">
-                Title{" "}
-                <span className="font-normal text-[#9A96A8]">(Optional)</span>
+                Title
               </label>
 
               <input

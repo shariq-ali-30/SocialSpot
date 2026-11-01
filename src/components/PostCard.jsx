@@ -117,7 +117,7 @@ const PostCard = ({ data, setOpenModal, setEditMode }) => {
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <span className="text-2xl font-semibold uppercase text-[#5B4BDB] mb-0.5">
+                  <span className="text-2xl font-semibold uppercase text-[#5B4BDB]">
                     {data.authorName.trim().charAt(0) || ""}
                   </span>
                 )}
@@ -326,7 +326,6 @@ const PostCard = ({ data, setOpenModal, setEditMode }) => {
                         getTimeAgo={getTimeAgo}
                         deleteComment={deleteComment}
                         isAuthor={isAuthor}
-                        postId={data.id}
                       />
                     );
                   })
